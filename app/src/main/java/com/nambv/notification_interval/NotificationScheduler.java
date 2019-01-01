@@ -12,6 +12,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -25,6 +26,7 @@ class NotificationScheduler {
     static void setReminder(Context context, Class<?> cls) {
 
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 1);
 
         // cancel already scheduled reminders
         cancelReminder(context, cls);
@@ -42,7 +44,7 @@ class NotificationScheduler {
         Intent intent1 = new Intent(context, cls);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_REQUEST_CODE, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + (60 * 1000L), 60 * 1000L, pendingIntent);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60 * 1000L, pendingIntent);
     }
 
     private static void cancelReminder(Context context, Class<?> cls) {
@@ -63,6 +65,9 @@ class NotificationScheduler {
     }
 
     static void showNotification(Context context, Class<?> cls, String title, String content) {
+
+        Log.w("NotificationScheduler", "showNotification");
+
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         Intent notificationIntent = new Intent(context, cls);
