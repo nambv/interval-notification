@@ -3,16 +3,34 @@ package com.nambv.notification_interval;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import com.firebase.jobdispatcher.*;
 
 public class MainApplication extends Application {
+
+    // Create a new dispatcher using the Google Play driver.
+    FirebaseJobDispatcher dispatcher;
+    private static MainApplication instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
+        dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
         registerActivityLifecycleCallbacks(new AppLifecycleTracker(this));
+        Intent stickyService = new Intent(this, StickyService.class);
+        startService(stickyService);
         Log.w("MainApplication", "onCreate");
+    }
+
+    public static MainApplication getInstance() {
+        return instance;
+    }
+
+    public FirebaseJobDispatcher getDispatcher() {
+        return dispatcher;
     }
 
     class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks {
@@ -52,7 +70,8 @@ public class MainApplication extends Application {
             numStarted--;
             if (numStarted == 0) {
                 Log.w("MainApplication", "Start reminder");
-                NotificationScheduler.setReminder(context, AlarmReceiver.class);
+                Job myJob = NotificationScheduler.getJob();
+                dispatcher.mustSchedule(myJob);
             }
         }
 
