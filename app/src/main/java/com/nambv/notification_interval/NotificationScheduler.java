@@ -16,25 +16,45 @@ import com.firebase.jobdispatcher.*;
 @SuppressWarnings("deprecation")
 class NotificationScheduler {
 
-    private static final int REMINDER_REQUEST_CODE = 100;
-    private static Job job;
+    static final String TAG_3_DAYS = "3-days-job";
+    static final String TAG_7_DAYS = "7-days-job";
 
-    static Job getJob() {
-        if (null == job) {
-            job = MainApplication.getInstance().getDispatcher()
+    private static final int REMINDER_REQUEST_CODE = 100;
+    private static Job job3Days;
+    private static Job job7Days;
+
+    static Job get3DaysJob() {
+        if (null == job3Days) {
+            job3Days = MainApplication.getInstance().getDispatcher()
                     .newJobBuilder()
                     .setService(MyJobService.class) // the JobService that will be called
-                    .setTag("my-unique-tag")// uniquely identifies the job
-                    .setLifetime(Lifetime.FOREVER)
-                    .setTrigger(Trigger.executionWindow(0, 60))
+                    .setTag(TAG_3_DAYS)// uniquely identifies the job3Days
+                    .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                    .setTrigger(Trigger.executionWindow(60 - 10, 60))
                     .setRecurring(true)
                     .setReplaceCurrent(false)
-                    .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                     .setConstraints(Constraint.ON_ANY_NETWORK)
                     .build();
         }
 
-        return job;
+        return job3Days;
+    }
+
+    static Job get7DaysJob() {
+        if (null == job7Days) {
+            job7Days = MainApplication.getInstance().getDispatcher()
+                    .newJobBuilder()
+                    .setService(MyJobService.class) // the JobService that will be called
+                    .setTag(TAG_7_DAYS)// uniquely identifies the job3Days
+                    .setTrigger(Trigger.executionWindow(120, 180))
+                    .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                    .setRecurring(true)
+                    .setReplaceCurrent(false)
+                    .setConstraints(Constraint.ON_ANY_NETWORK)
+                    .build();
+        }
+
+        return job7Days;
     }
 
 //    static void setReminder(Context context, Class<?> cls) {
@@ -85,7 +105,6 @@ class NotificationScheduler {
         Intent notificationIntent = new Intent(context, cls);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        String message = "Hello";
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(cls);
         stackBuilder.addNextIntent(notificationIntent);
@@ -96,7 +115,7 @@ class NotificationScheduler {
         if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
             notification = new Notification.Builder(context)
                     .setContentTitle(title)
-                    .setContentText(message)
+                    .setContentText(content)
                     .setAutoCancel(true)
                     .setSmallIcon(R.mipmap.ic_launcher_round)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -124,7 +143,7 @@ class NotificationScheduler {
             notification = new Notification.Builder(context)
                     .setChannelId(myUrgentChannel)
                     .setContentTitle(title)
-                    .setContentText(message)
+                    .setContentText(content)
                     .setAutoCancel(true)
                     .setSmallIcon(R.mipmap.ic_launcher_round)
                     .setContentIntent(pendingIntent)

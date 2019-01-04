@@ -22,7 +22,7 @@ public class StickyService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.w("MainApplication", "Start reminder service");
-        Job myJob = NotificationScheduler.getJob();
+        Job myJob = NotificationScheduler.get3DaysJob();
         MainApplication.getInstance().getDispatcher().mustSchedule(myJob);
     }
 }

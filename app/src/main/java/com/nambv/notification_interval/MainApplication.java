@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import com.firebase.jobdispatcher.*;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
 
 public class MainApplication extends Application {
 
@@ -70,8 +72,10 @@ public class MainApplication extends Application {
             numStarted--;
             if (numStarted == 0) {
                 Log.w("MainApplication", "Start reminder");
-                Job myJob = NotificationScheduler.getJob();
-                dispatcher.mustSchedule(myJob);
+                Job job3days = NotificationScheduler.get3DaysJob();
+                Job job7days = NotificationScheduler.get7DaysJob();
+                dispatcher.mustSchedule(job3days);
+                dispatcher.mustSchedule(job7days);
             }
         }
 

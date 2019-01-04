@@ -1,6 +1,5 @@
 package com.nambv.notification_interval;
 
-import android.util.Log;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
@@ -8,9 +7,15 @@ public class MyJobService extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
 
-        //Trigger the notification
-        NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
-                "Line Puzzle Ultimate", "Let's play a game");
+        switch (job.getTag()) {
+            case NotificationScheduler.TAG_3_DAYS:
+                NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
+                        "Line Puzzle Ultimate", "3 days message");
+                break;
+            default:
+                NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
+                        "Line Puzzle Ultimate", "7 days message");
+        }
 
         return false;
     }

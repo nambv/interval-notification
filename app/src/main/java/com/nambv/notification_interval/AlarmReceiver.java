@@ -7,7 +7,7 @@ package com.nambv.notification_interval;
 //    @Override
 //    public void onReceive(Context context, Intent intent) {
 //
-//        Job myJob = NotificationScheduler.getJob();
+//        Job myJob = NotificationScheduler.get3DaysJob();
 //
 //        if (intent.getAction() != null && context != null) {
 //            if (intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED)) {
