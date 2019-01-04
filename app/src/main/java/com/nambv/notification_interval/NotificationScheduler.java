@@ -11,7 +11,10 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import com.firebase.jobdispatcher.*;
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
 
 @SuppressWarnings("deprecation")
 class NotificationScheduler {
@@ -19,7 +22,9 @@ class NotificationScheduler {
     static final String TAG_3_DAYS = "3-days-job";
     static final String TAG_7_DAYS = "7-days-job";
 
-    private static final int REMINDER_REQUEST_CODE = 100;
+    private static final int REMINDER_3_DAYS = 100;
+    private static final int REMINDER_7_DAYS = 200;
+
     private static Job job3Days;
     private static Job job7Days;
 
@@ -76,7 +81,7 @@ class NotificationScheduler {
 //
 //
 //        Intent intent1 = new Intent(context, cls);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_REQUEST_CODE, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_3_DAYS, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 //        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 ////        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60 * 1000L, pendingIntent);
 //    }
@@ -92,13 +97,13 @@ class NotificationScheduler {
 //                PackageManager.DONT_KILL_APP);
 //
 //        Intent intent1 = new Intent(context, cls);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_REQUEST_CODE, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_3_DAYS, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 //        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 //        am.cancel(pendingIntent);
 //        pendingIntent.cancel();
 //    }
 
-    static void showNotification(Context context, Class<?> cls, String title, String content) {
+    static void showNotification(Context context, Class<?> cls, String title, String content, String tag) {
 
         Log.w("NotificationScheduler", "showNotification");
 
@@ -108,9 +113,10 @@ class NotificationScheduler {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(cls);
         stackBuilder.addNextIntent(notificationIntent);
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(REMINDER_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(REMINDER_3_DAYS, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification;
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (null == notificationManager) return;
 
         if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
             notification = new Notification.Builder(context)
@@ -150,6 +156,9 @@ class NotificationScheduler {
                     .build();
         }
 
-        notificationManager.notify(REMINDER_REQUEST_CODE, notification);
+        if (tag.equals(TAG_3_DAYS))
+            notificationManager.notify(REMINDER_3_DAYS, notification);
+        else
+            notificationManager.notify(REMINDER_7_DAYS, notification);
     }
 }

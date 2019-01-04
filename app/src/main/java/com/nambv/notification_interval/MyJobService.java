@@ -10,11 +10,11 @@ public class MyJobService extends JobService {
         switch (job.getTag()) {
             case NotificationScheduler.TAG_3_DAYS:
                 NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
-                        "Line Puzzle Ultimate", "3 days message");
+                        "Line Puzzle Ultimate", "3 days message", job.getTag());
                 break;
             default:
                 NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
-                        "Line Puzzle Ultimate", "7 days message");
+                        "Line Puzzle Ultimate", "7 days message", job.getTag());
         }
 
         return false;
