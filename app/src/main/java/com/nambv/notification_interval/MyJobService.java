@@ -3,12 +3,14 @@ package com.nambv.notification_interval;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
+import static com.nambv.notification_interval.MainApplication.TAG_3_DAYS;
+
 public class MyJobService extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
 
         switch (job.getTag()) {
-            case NotificationScheduler.TAG_3_DAYS:
+            case TAG_3_DAYS:
                 NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
                         "Line Puzzle Ultimate", "3 days message", job.getTag());
                 break;

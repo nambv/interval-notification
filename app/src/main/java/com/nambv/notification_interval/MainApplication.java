@@ -12,6 +12,10 @@ import com.firebase.jobdispatcher.Job;
 
 public class MainApplication extends Application {
 
+    static final String TAG_3_DAYS = "3-days-job";
+    static final String TAG_7_DAYS = "7-days-job";
+    static final String TAG_RANDOM_MORNING = "random-morning-job";
+
     // Create a new dispatcher using the Google Play driver.
     FirebaseJobDispatcher dispatcher;
     private static MainApplication instance;
@@ -24,7 +28,6 @@ public class MainApplication extends Application {
         registerActivityLifecycleCallbacks(new AppLifecycleTracker(this));
         Intent stickyService = new Intent(this, StickyService.class);
         startService(stickyService);
-        Log.w("MainApplication", "onCreate");
     }
 
     public static MainApplication getInstance() {
@@ -74,8 +77,10 @@ public class MainApplication extends Application {
                 Log.w("MainApplication", "Start reminder");
                 Job job3days = NotificationScheduler.get3DaysJob();
                 Job job7days = NotificationScheduler.get7DaysJob();
+                Job morningJob = NotificationScheduler.randomJob(NotificationScheduler.randomDateInWeek(), 6, 12, TAG_RANDOM_MORNING);
                 dispatcher.mustSchedule(job3days);
                 dispatcher.mustSchedule(job7days);
+                dispatcher.mustSchedule(morningJob);
             }
         }
 
