@@ -3,18 +3,18 @@
     <string-array name="notification_messages">
         <item>Bro, Circle Charm Saga is missing you! Head over here to play</item>
         <item>Bro, where are you?, I miss you so much". PLAY ME NOW </item>
-        <!--<item>It's almost time for 2048, CIRCLE CHARM SAGA</item>-->
-        <item>WHAT A GAME! Head over here to see the amazing!</item>
-        <item>Reward yourself today if you haven’t, Bros. You deserve it.</item>
+        <item>It\'s almost time for 2048, CIRCLE CHARM SAGA</item>
+        <item>WHAT A GAME! Head over here to see the amazing\!</item>
+        <item>Reward yourself today if you haven\'t, Bros. You deserve it.</item>
         <item>Bro, the perfect relaxing game - Circle Charm Saga - will make your happy day. Play game now!</item>
-        <item>CIRLCE CHARM SAGA is on! Share your happy moment with your friends.</item>
+        <item>CIRCLE CHARM SAGA is on! Share your happy moment with your friends.</item>
         <item>Keep your day beautiful with Circle Charm Saga. Play game now!</item>
         <item>Get higher score today with Circle Charm </item>
     </string-array>
     <string-array name="notification_Twice_messgaes">
-        <!--<item>You're accomplished a lot today. Take a rest with Cirlce Charm Saga! Check it out</item>-->
+        <item>You\'re accomplished a lot today. Take a rest with Circle Charm Saga. Check it out</item>
         <item>Have you relaxed yourself today?</item>
-        <!--<item>A simple night. Let's play 2048, Circle Charm Saga</item>-->
+        <item>A simple night. Let\'s play 2048, Circle Charm Saga</item>
         <item>Good evening bro! Play amazing game for amazing day</item>
     </string-array>
 </resources>

@@ -4,6 +4,7 @@ import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.nambv.notification_interval.MainApplication.*;
 
@@ -12,14 +13,14 @@ public class MyJobService extends JobService {
     public boolean onStartJob(JobParameters job) {
 
         String[] strings = getApplicationContext().getResources().getStringArray(R.array.notification_messages);
-        String message = randomMessage(strings, 9);
+        String message = randomMessage(strings, 8);
         String[] stringsTwice = getApplicationContext().getResources().getStringArray(R.array.notification_Twice_messgaes);
-        String message1 = randomMessage(stringsTwice, 4);
+        String message1 = randomMessage(stringsTwice, 3);
 
         switch (job.getTag()) {
             case TAG_3_DAYS:
                 NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
-                        "Circle Charm", "You haven't play CIRCLE CHARM SAGA for 3 Day!!! Would you like to do it now?", job.getTag());
+                        "Circle Charm", "You haven't play CIRCLE CHARM SAGA for 3 Days!!! Would you like to do it now?", job.getTag());
                 break;
             case TAG_RANDOM_MORNING:
                 NotificationScheduler.showNotification(getApplicationContext(), MainActivity.class,
@@ -67,9 +68,8 @@ public class MyJobService extends JobService {
     }
 
     private String randomMessage(String[] messages, int bound) {
-        Random rand = new Random();
-        int ran = rand.nextInt(9);
-        return messages[ran -1];
+        int ran = ThreadLocalRandom.current().nextInt(0, bound);
+        return messages[ran];
     }
 
     @Override

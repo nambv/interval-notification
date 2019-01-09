@@ -80,7 +80,11 @@ public class MainApplication extends Application {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                Log.w("MainApplication", "Start reminder");
+
+                // Cancel all jobs 1st before start it again!
+                dispatcher.cancelAll();
+
+                Log.w("MainApplication", "Start job");
 
                 // 3Days not play
                 Job job3days = NotificationScheduler.get3DaysJob();
