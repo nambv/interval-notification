@@ -19,6 +19,7 @@ import com.firebase.jobdispatcher.Trigger;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.nambv.notification_interval.MainApplication.TAG_14_DAYS;
 import static com.nambv.notification_interval.MainApplication.TAG_3_DAYS;
 import static com.nambv.notification_interval.MainApplication.TAG_7_DAYS;
 
@@ -27,9 +28,11 @@ class NotificationScheduler {
 
     private static final int REMINDER_3_DAYS = 100;
     private static final int REMINDER_7_DAYS = 200;
+    private static final int REMINDER_14_DAYS = 300;
 
     private static Job job3Days;
     private static Job job7Days;
+    private static Job job14Days;
     private static Job randomJob;
 
     static Job get3DaysJob() {
@@ -64,6 +67,23 @@ class NotificationScheduler {
         }
 
         return job7Days;
+    }
+
+    static Job get14DaysJob() {
+        if (null == job14Days) {
+            job14Days = MainApplication.getInstance().getDispatcher()
+                    .newJobBuilder()
+                    .setService(MyJobService.class) // the JobService that will be called
+                    .setTag(TAG_14_DAYS)// uniquely identifies the job3Days
+                    .setTrigger(Trigger.executionWindow(280, 300))
+                    .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                    .setRecurring(true)
+                    .setReplaceCurrent(false)
+                    .setConstraints(Constraint.ON_ANY_NETWORK)
+                    .build();
+        }
+
+        return job14Days;
     }
 
     static Job randomJob(Date randomDate, int startHour, int endHour, String tag) {
@@ -152,6 +172,7 @@ class NotificationScheduler {
                     .setContentTitle(title)
                     .setContentText(content)
                     .setAutoCancel(true)
+                    .setStyle(new Notification.BigTextStyle().bigText(content))
                     .setSmallIcon(R.mipmap.ic_launcher_round)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setContentIntent(pendingIntent)
@@ -180,6 +201,7 @@ class NotificationScheduler {
                     .setContentTitle(title)
                     .setContentText(content)
                     .setAutoCancel(true)
+                    .setStyle(new Notification.BigTextStyle().bigText(content))
                     .setSmallIcon(R.mipmap.ic_launcher_round)
                     .setContentIntent(pendingIntent)
                     .build();
