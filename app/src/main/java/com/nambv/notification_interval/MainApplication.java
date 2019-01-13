@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MainApplication extends Application {
 
-    static final String TAG_3_DAYS = "3-days-job";
+    static final String TAG_21_DAYS = "21-days-job";
     static final String TAG_7_DAYS = "7-days-job";
     static final String TAG_14_DAYS = "14-days-job";
     static final String TAG_RANDOM_MORNING = "random-morning-job";
@@ -81,13 +81,10 @@ public class MainApplication extends Application {
             numStarted--;
             if (numStarted == 0) {
 
-                // Cancel all jobs 1st before start it again!
-                dispatcher.cancelAll();
-
                 Log.w("MainApplication", "Start job");
 
                 // 3Days not play
-                Job job3days = NotificationScheduler.get3DaysJob();
+                Job job21days = NotificationScheduler.get21DaysJob();
 
                 // 7Days not play
                 Job job7days = NotificationScheduler.get7DaysJob();
@@ -135,7 +132,7 @@ public class MainApplication extends Application {
                     dispatcher.mustSchedule(job);
                 }
 
-                dispatcher.mustSchedule(job3days);
+                dispatcher.mustSchedule(job21days);
                 dispatcher.mustSchedule(job7days);
                 dispatcher.mustSchedule(job14days);
                 dispatcher.mustSchedule(morningJob);

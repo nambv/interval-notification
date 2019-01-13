@@ -19,37 +19,43 @@ import com.firebase.jobdispatcher.Trigger;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.nambv.notification_interval.MainApplication.TAG_14_DAYS;
-import static com.nambv.notification_interval.MainApplication.TAG_3_DAYS;
-import static com.nambv.notification_interval.MainApplication.TAG_7_DAYS;
+import static com.nambv.notification_interval.MainApplication.*;
 
 @SuppressWarnings("deprecation")
 class NotificationScheduler {
 
-    private static final int REMINDER_3_DAYS = 100;
+    private static final int REMINDER_21_DAYS = 100;
     private static final int REMINDER_7_DAYS = 200;
     private static final int REMINDER_14_DAYS = 300;
+    private static final int REMINDER_MORNING = 400;
+    private static final int REMINDER_AFTERNOON = 500;
+    private static final int REMINDER_WEEKEND = 600;
 
-    private static Job job3Days;
+    private static final int VALUE_1_DAYS = 60 * 60 * 24;
+    private static final int VALUE_21_DAYS = VALUE_1_DAYS * 21;
+    private static final int VALUE_14_DAYS = VALUE_1_DAYS * 14;
+    private static final int VALUE_7_DAYS = VALUE_1_DAYS * 7;
+
+    private static Job job21Days;
     private static Job job7Days;
     private static Job job14Days;
     private static Job randomJob;
 
-    static Job get3DaysJob() {
-        if (null == job3Days) {
-            job3Days = MainApplication.getInstance().getDispatcher()
+    static Job get21DaysJob() {
+        if (null == job21Days) {
+            job21Days = MainApplication.getInstance().getDispatcher()
                     .newJobBuilder()
                     .setService(MyJobService.class) // the JobService that will be called
-                    .setTag(TAG_3_DAYS)// uniquely identifies the job3Days
+                    .setTag(TAG_21_DAYS)// uniquely identifies the job21Days
                     .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
-                    .setTrigger(Trigger.executionWindow(60 - 10, 60))
+                    .setTrigger(Trigger.executionWindow(VALUE_7_DAYS - 60, VALUE_7_DAYS))
                     .setRecurring(true)
                     .setReplaceCurrent(false)
                     .setConstraints(Constraint.ON_ANY_NETWORK)
                     .build();
         }
 
-        return job3Days;
+        return job21Days;
     }
 
     static Job get7DaysJob() {
@@ -57,8 +63,8 @@ class NotificationScheduler {
             job7Days = MainApplication.getInstance().getDispatcher()
                     .newJobBuilder()
                     .setService(MyJobService.class) // the JobService that will be called
-                    .setTag(TAG_7_DAYS)// uniquely identifies the job3Days
-                    .setTrigger(Trigger.executionWindow(120, 180))
+                    .setTag(TAG_7_DAYS)// uniquely identifies the job21Days
+                    .setTrigger(Trigger.executionWindow(VALUE_14_DAYS - 60, VALUE_14_DAYS))
                     .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                     .setRecurring(true)
                     .setReplaceCurrent(false)
@@ -74,8 +80,8 @@ class NotificationScheduler {
             job14Days = MainApplication.getInstance().getDispatcher()
                     .newJobBuilder()
                     .setService(MyJobService.class) // the JobService that will be called
-                    .setTag(TAG_14_DAYS)// uniquely identifies the job3Days
-                    .setTrigger(Trigger.executionWindow(280, 300))
+                    .setTag(TAG_14_DAYS)// uniquely identifies the job21Days
+                    .setTrigger(Trigger.executionWindow(VALUE_21_DAYS - 60, VALUE_21_DAYS))
                     .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                     .setRecurring(true)
                     .setReplaceCurrent(false)
@@ -99,7 +105,7 @@ class NotificationScheduler {
             randomJob = MainApplication.getInstance().getDispatcher()
                     .newJobBuilder()
                     .setService(MyJobService.class) // the JobService that will be called
-                    .setTag(tag)// uniquely identifies the job3Days
+                    .setTag(tag)// uniquely identifies the job21Days
                     .setTrigger(Trigger.executionWindow(startSeconds, endSeconds))
                     .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                     .setRecurring(true)
@@ -130,7 +136,7 @@ class NotificationScheduler {
 //
 //
 //        Intent intent1 = new Intent(context, cls);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_3_DAYS, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_21_DAYS, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 //        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 ////        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60 * 1000L, pendingIntent);
 //    }
@@ -146,7 +152,7 @@ class NotificationScheduler {
 //                PackageManager.DONT_KILL_APP);
 //
 //        Intent intent1 = new Intent(context, cls);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_3_DAYS, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REMINDER_21_DAYS, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 //        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 //        am.cancel(pendingIntent);
 //        pendingIntent.cancel();
@@ -162,7 +168,7 @@ class NotificationScheduler {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(cls);
         stackBuilder.addNextIntent(notificationIntent);
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(REMINDER_3_DAYS, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(REMINDER_21_DAYS, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification;
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (null == notificationManager) return;
@@ -207,9 +213,25 @@ class NotificationScheduler {
                     .build();
         }
 
-        if (tag.equals(TAG_3_DAYS))
-            notificationManager.notify(REMINDER_3_DAYS, notification);
-        else
-            notificationManager.notify(REMINDER_7_DAYS, notification);
+        switch (tag) {
+            case TAG_21_DAYS:
+                notificationManager.notify(REMINDER_21_DAYS, notification);
+                break;
+            case TAG_7_DAYS:
+                notificationManager.notify(REMINDER_7_DAYS, notification);
+                break;
+            case TAG_14_DAYS:
+                notificationManager.notify(REMINDER_14_DAYS, notification);
+                break;
+            case TAG_RANDOM_MORNING:
+                notificationManager.notify(REMINDER_MORNING, notification);
+                break;
+            case TAG_RANDOM_AFTERNOON:
+                notificationManager.notify(REMINDER_AFTERNOON, notification);
+                break;
+            case TAG_WEEKEND:
+                notificationManager.notify(REMINDER_WEEKEND, notification);
+                break;
+        }
     }
 }

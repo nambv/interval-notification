@@ -1,12 +1,8 @@
 package com.nambv.notification_interval;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
 
-public class DateUtils {
+class DateUtils {
 
     /**
      * Random time between beginTime and endTime
@@ -38,8 +34,8 @@ public class DateUtils {
         Date randomDate = null;
 
         while (!validate) {
-            randomDate = new Date(ThreadLocalRandom.current()
-                    .nextLong(startDate.getTime(), endDate.getTime()));
+            Random random = new Random();
+            randomDate = new Date((random.nextLong() % (endDate.getTime() - startDate.getTime())) + startDate.getTime());
             if (randomDate.after(Calendar.getInstance().getTime())) {
                 validate = true;
             }
@@ -75,7 +71,7 @@ public class DateUtils {
 
     static Date getPreviousDate(Date inputDate) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(getWeekEndDate());
+        calendar.setTime(inputDate);
         calendar.add(Calendar.DATE, -1);
         return calendar.getTime();
     }
